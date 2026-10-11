@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Cửa Hàng Trực Tuyến - Client Node</title>
+    <style>
+        :root { --primary: #4f46e5; --bg: #f8fafc; --card: #ffffff; }
+        body { font-family: Arial, sans-serif; margin: 0; padding: 40px; background: var(--bg); color: #1e293b; display: flex; flex-direction: column; align-items: center; }
+        h1 { color: #334155; margin-bottom: 30px; text-align: center; }
+        .shop-container { width: 100%; max-width: 600px; background: var(--card); padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
+        h2 { color: #1e293b; border-bottom: 2px solid #e2e8f0; padding-bottom: 12px; margin-top: 0; }
+        .product { border: 1px solid #e2e8f0; padding: 20px; margin-bottom: 20px; border-radius: 8px; background: #fdfdfd; display: flex; justify-content: space-between; align-items: center; }
+        .info h3 { margin: 0 0 5px 0; color: #0f172a; }
+        .info p { margin: 0; color: #64748b; font-weight: 600; }
+        button { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; }
+        button:hover { background: #4338ca; }
+        .status-msg { margin-top: 15px; text-align: center; font-weight: 600; color: #10b981; min-height: 24px; }
+    </style>
+</head>
+<body>
+    <h1>🛍️ Kênh Mua Sắm Khách Hàng (Client Server)</h1>
+    <div class="shop-container">
+        <h2>Danh mục sản phẩm</h2>
+        <div class="product">
+            <div class="info">
+                <h3>Điện thoại Smartphone X</h3>
+                <p>5,000,000 VNĐ</p>
+            </div>
+            <button onclick="orderProduct('Smartphone X', 5000000)">Đặt hàng ngay</button>
+        </div>
+        <div class="product">
+            <div class="info">
+                <h3>Laptop Gaming Pro</h3>
+                <p>20,000,000 VNĐ</p>
+            </div>
+            <button onclick="orderProduct('Laptop Gaming Pro', 20000000)">Đặt hàng ngay</button>
+        </div>
+        <div class="status-msg" id="statusMsg"></div>
+    </div>
+    <script>
+        function orderProduct(productName, price) {
+            fetch('/api/order', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ product: productName, price: price, time: new Date().toLocaleTimeString() })
+            })
+            .then(res => res.json())
+            .then(data => {
+                const msg = document.getElementById('statusMsg');
+                msg.innerText = '✅ ' + data.message;
+                setTimeout(() => { msg.innerText = ''; }, 4000);
+            })
+            .catch(err => {
+                alert('Lỗi kết nối tới Server Khách!');
+            });
+        }
+    </script>
+</body>
+</html>
